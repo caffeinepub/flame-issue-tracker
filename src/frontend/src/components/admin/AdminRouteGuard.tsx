@@ -21,7 +21,7 @@ export default function AdminRouteGuard({ children }: AdminRouteGuardProps) {
   }
 
   if (userRole !== UserRole.admin) {
-    return <AccessDeniedScreen />;
+    return <AccessDeniedScreen userRole={userRole} />;
   }
 
   return <>{children}</>;

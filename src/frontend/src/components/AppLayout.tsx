@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useGetCallerUserRole } from '../hooks/useAuthorization';
 import { UserRole } from '../backend';
 import ProfileSetupDialog from './ProfileSetupDialog';
+import PrincipalIndicator from './PrincipalIndicator';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -81,7 +82,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {isAdmin && (
                 <>
                   <Link 
-                    to="/admin/complaints" 
+                    to="/admin" 
                     className="transition-colors hover:text-foreground/80 text-foreground/60 font-medium"
                   >
                     Admin
@@ -97,7 +98,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <PrincipalIndicator />
             <Button
               onClick={handleAuth}
               disabled={isLoggingIn}
@@ -150,7 +152,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {isAdmin && (
                 <>
                   <Link 
-                    to="/admin/complaints" 
+                    to="/admin" 
                     className="text-sm font-medium"
                     onClick={() => setMobileMenuOpen(false)}
                   >

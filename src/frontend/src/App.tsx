@@ -4,8 +4,10 @@ import ComplaintBoardPage from './pages/ComplaintBoardPage';
 import SubmitComplaintPage from './pages/SubmitComplaintPage';
 import ComplaintDetailPage from './pages/ComplaintDetailPage';
 import SolutionsUpdatesPage from './pages/SolutionsUpdatesPage';
+import AdminLandingPage from './pages/admin/AdminLandingPage';
 import AdminComplaintsPage from './pages/admin/AdminComplaintsPage';
 import AdminSolutionsPage from './pages/admin/AdminSolutionsPage';
+import WhoAmIPage from './pages/WhoAmIPage';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
 
@@ -41,6 +43,18 @@ const solutionsRoute = createRoute({
   component: SolutionsUpdatesPage,
 });
 
+const whoamiRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/api/whoami',
+  component: WhoAmIPage,
+});
+
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: AdminLandingPage,
+});
+
 const adminComplaintsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin/complaints',
@@ -58,6 +72,8 @@ const routeTree = rootRoute.addChildren([
   submitRoute,
   complaintDetailRoute,
   solutionsRoute,
+  whoamiRoute,
+  adminRoute,
   adminComplaintsRoute,
   adminSolutionsRoute,
 ]);

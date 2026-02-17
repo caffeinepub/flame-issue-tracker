@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the app’s header logo with the uploaded image and add a matching favicon.
+**Goal:** Ensure the user’s Internet Identity Principal is reliably available from the backend and visible in the app, including restoring a working `/api/whoami` page.
 
 **Planned changes:**
-- Convert/crop/scale the uploaded `website logo.png` into a square 512×512 logo asset at `frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png` (maintaining the existing header reference path).
-- Ensure the header renders the updated logo correctly and crisply at the current size (`h-10 w-10`) across all pages and viewports.
-- Generate a favicon derived from the uploaded logo and reference it in `frontend/index.html` via a `<link rel="icon" ...>` tag.
+- Add a new public backend query method in `backend/main.mo` that returns the current caller’s Principal (and role if available) in a frontend-friendly format.
+- Add a frontend SPA route at `/api/whoami` that displays the current Principal fetched from the backend and includes a one-click Copy action with confirmation.
+- Display the authenticated user’s Principal (shortened with a way to view/copy the full value) in the main authenticated UI.
+- Update the Access Denied experience to provide English troubleshooting guidance and a link to `/api/whoami` for retrieving the user’s Principal.
 
-**User-visible outcome:** The site header displays the new uploaded logo on all pages, and browser tabs show the new favicon (after hard refresh).
+**User-visible outcome:** Users can see and copy their current Principal from both `/api/whoami` and the main authenticated UI, and Access Denied screens guide non-admin users to retrieve and share their Principal for admin enablement.

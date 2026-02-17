@@ -10,6 +10,7 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface CallerInfo { 'principal' : Principal, 'role' : UserRole }
 export interface Complaint {
   'id' : bigint,
   'status' : ComplaintStatus,
@@ -88,6 +89,7 @@ export interface _SERVICE {
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getComplaint' : ActorMethod<[bigint], [] | [Complaint]>,
+  'getCurrentUserPrincipal' : ActorMethod<[], CallerInfo>,
   'getPublicComplaints' : ActorMethod<[], Array<Complaint>>,
   'getSolutions' : ActorMethod<[], Array<SolutionUpdate>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,

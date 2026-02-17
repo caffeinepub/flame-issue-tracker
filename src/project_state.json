@@ -1,11 +1,17 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 5,
+  "projectStateVersion": 9,
   "summary": "Complaint and issue-tracking website for FLAME University students, with structured complaint submission, categorization, public status tracking, and publicly visible solutions/updates to improve transparency and resolution efficiency.",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
-  "imageRequirements": "## Edit Images\n- Convert/crop/scale the uploaded logo into a square 512x512 asset suitable for a header logo (website logo.png > flame-issue-tracker-logo.dim_512x512.png)\n- Generate a small favicon from the uploaded logo (website logo.png > favicon.dim_32x32.png)",
+  "architectural_notes": [
+    "Admin Panel should be accessible at /admin; ensure the frontend router/build includes the /admin route and page bundle in production deployments.",
+    "Ensure the backend includes and serves an authenticated identity/debug endpoint (e.g., GET /api/whoami) in production builds so users can retrieve their Principal after Internet Identity login."
+  ],
+  "known_issues": [
+    "Admin panel URL /admin returns \"Not Found\" on production deployment (https://flame-issue-tracker-lm2.caffeine.xyz/admin).",
+    "After logging in with Internet Identity, /api/whoami returns \"Not Found\", preventing users from retrieving their Principal ID.",
+    "Admin panel at /admin shows \"Access Denied\" even when user believes they are using the same Internet Identity account (likely admin allowlist/principal mismatch or auth not being recognized in production)."
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-implement-complaint-submission-with-a-structured-form-that-collects-complaint-type-category-description-urgency-level-and-an-optional-proof-upload-validate-inputs-and-show-clear-success-error-states",
@@ -86,6 +92,46 @@
         "REQ-10"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-make-the-admin-panel-accessible-at-the-exact-path-admin-https-flame-issue-tracker-lm2-caffeine-xyz-admin-so-it-no-longer-returns-not-found",
+      "title": "Make the Admin Panel accessible at the exact path \"/admin\" (https://flame-issue-tracker-lm2.caffeine.xyz/admin) so it no longer returns \"Not Found\".",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-navigation-and-deep-links-related-to-the-admin-panel-consistently-work-with-the-fixed-admin-entry-point-including-direct-url-entry-and-refresh",
+      "title": "Ensure navigation and deep links related to the Admin Panel consistently work with the fixed /admin entry point (including direct URL entry and refresh).",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-frontend-route-at-api-whoami-that-renders-a-simple-page-showing-the-current-principal-and-role-if-available-and-provides-a-one-click-copy-action",
+      "title": "Create a frontend route at \"/api/whoami\" that renders a simple page showing the current Principal (and role if available) and provides a one-click copy action.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-show-the-logged-in-principal-shortened-with-a-full-value-tooltip-or-expandable-view-somewhere-in-the-main-authenticated-ui-e-g-header-area-so-users-can-confirm-which-internet-identity-account-is-active",
+      "title": "Show the logged-in Principal (shortened with a full-value tooltip or expandable view) somewhere in the main authenticated UI (e.g., header area) so users can confirm which Internet Identity account is active.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-access-denied-experience-to-include-troubleshooting-guidance-that-directs-users-to-api-whoami-to-retrieve-their-principal-for-admin-enablement",
+      "title": "Update the admin access denied experience to include troubleshooting guidance that directs users to \"/api/whoami\" to retrieve their Principal for admin enablement.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -129,6 +175,14 @@
       "id": "AR-7",
       "summary": "Mobile-friendly, clean and formal UI with clear category tabs and status tags",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add a backend query method that returns the current caller’s Principal (and optionally their role) so the frontend can reliably display the logged-in identity.",
+      "reqIds": [
+        "REQ-13"
+      ],
       "status": "pending"
     }
   ],

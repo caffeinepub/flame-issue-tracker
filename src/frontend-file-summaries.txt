@@ -1,6 +1,6 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining all routes (public complaint board, submit, detail, solutions, admin pages) and wrapping with ThemeProvider and Toaster for notifications.",
-  "frontend/src/components/AppLayout.tsx": "Shared responsive layout component with header (logo, navigation, login/logout), mobile menu, and footer with attribution; conditionally shows admin navigation based on user role.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup, defining all routes including the new /api/whoami route, public complaint board, submit, detail, solutions, and admin pages; wrapped with ThemeProvider and Toaster for notifications.",
+  "frontend/src/components/AppLayout.tsx": "Shared responsive layout component with header (logo, navigation, PrincipalIndicator, login/logout), mobile menu, and footer with attribution; admin navigation points to /admin entry route.",
   "frontend/src/components/ProfileSetupDialog.tsx": "Modal dialog that prompts authenticated users without a profile to enter their name and optional email on first login; prevents dismissal until profile is created.",
   "frontend/src/components/StatusTag.tsx": "Reusable badge component that displays complaint status (Submitted, Under Review, In Progress, Resolved) with distinct colors and styling for each state.",
   "frontend/src/components/CategoryTabs.tsx": "Horizontal tabs component for browsing complaints by category (All, Food Services, Professors & Academics, etc.); responsive and mobile-friendly with wrapping support.",
@@ -8,8 +8,8 @@
   "frontend/src/components/ComplaintSearchAndFilters.tsx": "Combined search and filter UI with text search input and dropdowns for category, status, and urgency; includes clear filters button when active.",
   "frontend/src/components/ProofUploadField.tsx": "File upload field for optional proof attachments with validation (5MB max, JPG/PNG/PDF only), progress tracking via ExternalBlob, and file preview/removal.",
   "frontend/src/components/SubmitResultBanner.tsx": "Alert banner component for displaying success or error messages after complaint submission with appropriate icons and styling.",
-  "frontend/src/components/AccessDeniedScreen.tsx": "Full-page access denied screen shown to non-admin users attempting to access admin routes, with link back to public complaint board.",
-  "frontend/src/components/admin/AdminRouteGuard.tsx": "Route guard wrapper that checks user role and renders AccessDeniedScreen for non-admins or shows loading skeleton while checking authorization.",
+  "frontend/src/components/AccessDeniedScreen.tsx": "Full-page access denied screen with role-aware messaging that distinguishes between guests (not logged in) and authenticated non-admins, includes link to /api/whoami for admin access requests.",
+  "frontend/src/components/admin/AdminRouteGuard.tsx": "Route guard wrapper that checks user role and renders AccessDeniedScreen with role information for non-admins or shows loading skeleton while checking authorization.",
   "frontend/src/components/solutions/SolutionCard.tsx": "Card component displaying solution/update entry with title, description, timestamp, and related categories/complaints links.",
   "frontend/src/components/solutions/RelatedLinks.tsx": "Component rendering related categories as badges and related complaint IDs as clickable type-safe Links to complaint detail pages using params prop.",
   "frontend/src/pages/ComplaintBoardPage.tsx": "Main public complaint board page with category tabs, search/filters, and separated lists for active and resolved complaints; handles all filtering logic client-side.",
@@ -23,5 +23,9 @@
   "frontend/src/lib/complaintTaxonomy.ts": "Shared constants and helper functions for complaint categories, providing single source of truth for category labels and enum-to-label mapping.",
   "frontend/src/index.css": "Global styles with OKLCH color system defining a professional university theme with warm accents; includes light and dark mode tokens with proper contrast ratios.",
   "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens, Inter font family, and extended theme settings for consistent design system across the application.",
-  "frontend/index.html": "HTML entry point with favicon reference to the generated 32x32 FLAME logo icon for browser tabs."
+  "frontend/index.html": "HTML entry point with favicon reference to the generated 32x32 FLAME logo icon for browser tabs.",
+  "frontend/src/pages/admin/AdminLandingPage.tsx": "Admin landing page component that serves as the entry point at /admin route, displaying two card links to manage complaints and solutions with descriptions and icons; protected by AdminRouteGuard.",
+  "frontend/src/hooks/useCallerInfo.ts": "React Query hook that fetches the current caller's Principal and role from the backend using getCurrentUserPrincipal, with caching and guest fallback when actor is unavailable.",
+  "frontend/src/pages/WhoAmIPage.tsx": "Full-page component displaying the user's Principal ID and role with copy-to-clipboard functionality, helpful messaging for guests and non-admin users, and loading/error states.",
+  "frontend/src/components/PrincipalIndicator.tsx": "Header component that shows a shortened Principal ID for authenticated users with a dialog to view and copy the full Principal, hidden for anonymous/guest users."
 }

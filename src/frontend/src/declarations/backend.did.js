@@ -54,6 +54,10 @@ export const UserProfile = IDL.Record({
   'name' : IDL.Text,
   'email' : IDL.Opt(IDL.Text),
 });
+export const CallerInfo = IDL.Record({
+  'principal' : IDL.Principal,
+  'role' : UserRole,
+});
 export const SolutionUpdate = IDL.Record({
   'id' : IDL.Nat,
   'relatedComplaints' : IDL.Vec(IDL.Nat),
@@ -113,6 +117,7 @@ export const idlService = IDL.Service({
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getComplaint' : IDL.Func([IDL.Nat], [IDL.Opt(Complaint)], ['query']),
+  'getCurrentUserPrincipal' : IDL.Func([], [CallerInfo], ['query']),
   'getPublicComplaints' : IDL.Func([], [IDL.Vec(Complaint)], ['query']),
   'getSolutions' : IDL.Func([], [IDL.Vec(SolutionUpdate)], ['query']),
   'getUserProfile' : IDL.Func(
@@ -181,6 +186,10 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'email' : IDL.Opt(IDL.Text),
   });
+  const CallerInfo = IDL.Record({
+    'principal' : IDL.Principal,
+    'role' : UserRole,
+  });
   const SolutionUpdate = IDL.Record({
     'id' : IDL.Nat,
     'relatedComplaints' : IDL.Vec(IDL.Nat),
@@ -240,6 +249,7 @@ export const idlFactory = ({ IDL }) => {
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getComplaint' : IDL.Func([IDL.Nat], [IDL.Opt(Complaint)], ['query']),
+    'getCurrentUserPrincipal' : IDL.Func([], [CallerInfo], ['query']),
     'getPublicComplaints' : IDL.Func([], [IDL.Vec(Complaint)], ['query']),
     'getSolutions' : IDL.Func([], [IDL.Vec(SolutionUpdate)], ['query']),
     'getUserProfile' : IDL.Func(

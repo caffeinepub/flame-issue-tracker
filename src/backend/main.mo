@@ -13,7 +13,9 @@ import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   type ComplaintStatus = {
     #submitted;
@@ -55,6 +57,11 @@ actor {
   public type UserProfile = {
     name : Text;
     email : ?Text;
+  };
+
+  public type CallerInfo = {
+    principal : Principal;
+    role : AccessControl.UserRole;
   };
 
   module Complaint {
@@ -220,6 +227,14 @@ actor {
   };
 
   // Public Query Functions
+  public query ({ caller }) func getCurrentUserPrincipal() : async CallerInfo {
+    // No authorization check - all callers (including guests) can query their own identity
+    {
+      principal = caller;
+      role = AccessControl.getUserRole(accessControlState, caller);
+    };
+  };
+
   public query func getPublicComplaints() : async [Complaint] {
     complaints.values().filter(
       func(complaint) {

@@ -1,59 +1,92 @@
 {
   "kind": "build_request",
-  "title": "Use uploaded image as site logo",
+  "title": "Fix missing Principal display and restore /api/whoami",
   "projectName": "FLAME Issue Tracker",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-9",
-      "text": "Replace the current site logo with the user-uploaded image (website logo.png) by generating and using a 512x512 logo asset at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png (the same path currently referenced in the header), ensuring the logo renders correctly in the header on all pages.",
-      "target": "frontend",
+      "id": "REQ-13",
+      "text": "Add a backend query method that returns the current caller’s Principal (and optionally their role) so the frontend can reliably display the logged-in identity.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "use this as the website logo"
+          "my principal isnt coming fix the site first"
         ]
       },
       "acceptanceCriteria": [
-        "The header logo loads from /assets/generated/flame-issue-tracker-logo.dim_512x512.png without 404s.",
-        "The displayed header logo matches the uploaded image (website logo.png).",
-        "The logo displays crisply at the current header size (h-10 w-10) on both mobile and desktop views."
+        "A new public query method exists in backend/main.mo that returns the caller Principal in a frontend-friendly format (e.g., Text).",
+        "Calling the method when logged out returns the anonymous principal rather than failing.",
+        "Calling the method when logged in returns the authenticated Internet Identity principal."
       ]
     },
     {
-      "id": "REQ-10",
-      "text": "Add a favicon derived from the uploaded logo and reference it in frontend/index.html so browser tabs show the new icon.",
+      "id": "REQ-14",
+      "text": "Create a frontend route at \"/api/whoami\" that renders a simple page showing the current Principal (and role if available) and provides a one-click copy action.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "use this as the website logo"
+          "the page that is supposed to show the principal is showing not found"
         ]
       },
       "acceptanceCriteria": [
-        "A favicon file is present in frontend/public (or frontend/public/assets/generated) and is referenced via a <link rel=\"icon\" ...> tag in frontend/index.html.",
-        "Opening the app shows the new favicon in the browser tab (after a hard refresh)."
+        "Visiting https://flame-issue-tracker-lm2.caffeine.xyz/api/whoami no longer shows Not Found and renders a page within the SPA.",
+        "The page shows the current Principal value pulled from the backend (not hardcoded).",
+        "The page includes a Copy button that copies the displayed Principal to clipboard and shows a success/toast confirmation."
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Show the logged-in Principal (shortened with a full-value tooltip or expandable view) somewhere in the main authenticated UI (e.g., header area) so users can confirm which Internet Identity account is active.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "my principal isnt coming fix the site first"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When a user is authenticated, the UI displays a recognizable Principal indicator (e.g., first/last characters).",
+        "There is a clear way to view/copy the full Principal from the UI without needing to navigate to admin routes.",
+        "When logged out, the Principal indicator is not shown (or clearly indicates the user is not logged in)."
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "text": "Update the admin access denied experience to include troubleshooting guidance that directs users to \"/api/whoami\" to retrieve their Principal for admin enablement.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "its showing access denied now"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Access Denied screen includes a visible link to \"/api/whoami\" and instructs the user to copy and share the Principal with the site administrator.",
+        "User-facing text is in English and clearly distinguishes ‘not admin’ from ‘not logged in’."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (read-only).",
-    "Do not edit files listed as immutable paths in SYSTEM_CONTEXT (compose around them instead)."
+    "Keep all Motoko logic in the single backend actor at backend/main.mo (single-actor architecture).",
+    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or anything inside frontend/src/components/ui; compose or add new components/pages instead."
   ],
   "nonGoals": [
-    "Add or change authentication/authorization behavior.",
-    "Change complaint/solutions functionality or backend data models."
+    "Do not automatically grant admin access to the currently logged-in Principal.",
+    "Do not add third-party authentication providers; use Internet Identity only."
   ],
   "imageRequirements": {
     "required": [],
-    "edits": [
-      "Convert/crop/scale the uploaded logo into a square 512x512 asset suitable for a header logo (website logo.png > flame-issue-tracker-logo.dim_512x512.png)",
-      "Generate a small favicon from the uploaded logo (website logo.png > favicon.dim_32x32.png)"
-    ]
+    "edits": []
   },
   "userProfileUpdate": {
     "goalsToAdd": [],

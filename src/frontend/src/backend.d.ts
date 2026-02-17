@@ -14,6 +14,10 @@ export class ExternalBlob {
     static fromBytes(blob: Uint8Array<ArrayBuffer>): ExternalBlob;
     withUploadProgress(onProgress: (percentage: number) => void): ExternalBlob;
 }
+export interface CallerInfo {
+    principal: Principal;
+    role: UserRole;
+}
 export interface Complaint {
     id: bigint;
     status: ComplaintStatus;
@@ -67,6 +71,7 @@ export interface backendInterface {
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getComplaint(complaintId: bigint): Promise<Complaint | null>;
+    getCurrentUserPrincipal(): Promise<CallerInfo>;
     getPublicComplaints(): Promise<Array<Complaint>>;
     getSolutions(): Promise<Array<SolutionUpdate>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
