@@ -1,0 +1,68 @@
+{
+  "kind": "build_request",
+  "title": "Use uploaded image as site logo",
+  "projectName": "FLAME Issue Tracker",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-9",
+      "text": "Replace the current site logo with the user-uploaded image (website logo.png) by generating and using a 512x512 logo asset at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png (the same path currently referenced in the header), ensuring the logo renders correctly in the header on all pages.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "use this as the website logo"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The header logo loads from /assets/generated/flame-issue-tracker-logo.dim_512x512.png without 404s.",
+        "The displayed header logo matches the uploaded image (website logo.png).",
+        "The logo displays crisply at the current header size (h-10 w-10) on both mobile and desktop views."
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Add a favicon derived from the uploaded logo and reference it in frontend/index.html so browser tabs show the new icon.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "use this as the website logo"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A favicon file is present in frontend/public (or frontend/public/assets/generated) and is referenced via a <link rel=\"icon\" ...> tag in frontend/index.html.",
+        "Opening the app shows the new favicon in the browser tab (after a hard refresh)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit files under frontend/src/components/ui (read-only).",
+    "Do not edit files listed as immutable paths in SYSTEM_CONTEXT (compose around them instead)."
+  ],
+  "nonGoals": [
+    "Add or change authentication/authorization behavior.",
+    "Change complaint/solutions functionality or backend data models."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": [
+      "Convert/crop/scale the uploaded logo into a square 512x512 asset suitable for a header logo (website logo.png > flame-issue-tracker-logo.dim_512x512.png)",
+      "Generate a small favicon from the uploaded logo (website logo.png > favicon.dim_32x32.png)"
+    ]
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

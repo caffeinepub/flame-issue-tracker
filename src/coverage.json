@@ -1,0 +1,54 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-17T12:04:13.017Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-10",
+        "summary": "Add a favicon derived from the uploaded logo and reference it in frontend/index.html so browser tabs show the new icon.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/generated/favicon.dim_32x32.png",
+          "frontend/index.html"
+        ],
+        "matchedFiles": [
+          "frontend/public/assets/generated/favicon.dim_32x32.png",
+          "frontend/index.html"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Replace the current site logo with the user-uploaded image (website logo.png) by generating and using a 512x512 logo asset at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png (the same path currently referenced in the header), ensuring the logo renders correctly in the header on all pages.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png",
+          "frontend/src/components/AppLayout.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "build-template/README.md",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/index.html",
+    "frontend/public/assets/generated/favicon.dim_32x32.png",
+    "frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

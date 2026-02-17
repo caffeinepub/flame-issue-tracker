@@ -1,0 +1,43 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-replace-the-current-site-logo-with-the-user-uploaded-image-website-logo-png-by-generating-and-using-a-512x512-logo-asset-at-frontend-public-assets-generated-flame-issue-tracker-logo-dim-512x512-png-the-same-path-currently-referenced-in-the-header-ensuring-the-logo-renders-correctly-in-the-header-on-all-pages",
+      "featureTitle": "Replace the current site logo with the user-uploaded image (website logo.png) by generating and using a 512x512 logo asset at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png (the same path currently referenced in the header), ensuring the logo renders correctly in the header on all pages.",
+      "files": [],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-favicon-derived-from-the-uploaded-logo-and-reference-it-in-frontend-index-html-so-browser-tabs-show-the-new-icon",
+      "featureTitle": "Add a favicon derived from the uploaded logo and reference it in frontend/index.html so browser tabs show the new icon.",
+      "files": [
+        "frontend/index.html"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

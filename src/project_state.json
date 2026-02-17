@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "Complaint and issue-tracking website for FLAME University students, with structured complaint submission, categorization, public status tracking, and publicly visible solutions/updates to improve transparency and resolution efficiency.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Edit Images\n- Convert/crop/scale the uploaded logo into a square 512x512 asset suitable for a header logo (website logo.png > flame-issue-tracker-logo.dim_512x512.png)\n- Generate a small favicon from the uploaded logo (website logo.png > favicon.dim_32x32.png)",
+  "existing_features": [
+    {
+      "id": "feature-implement-complaint-submission-with-a-structured-form-that-collects-complaint-type-category-description-urgency-level-and-an-optional-proof-upload-validate-inputs-and-show-clear-success-error-states",
+      "title": "Implement complaint submission with a structured form that collects complaint type, category, description, urgency level, and an optional proof upload; validate inputs and show clear success/error states.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-complaint-categories-and-category-browsing-ui-tabs-sections-covering-food-services-professors-academics-ragging-safety-discipline-rules-hostel-facilities-and-administration-and-ensure-each-complaint-is-shown-under-its-selected-category",
+      "title": "Create complaint categories and category browsing UI (tabs/sections) covering: Food Services, Professors & Academics, Ragging & Safety, Discipline Rules, Hostel/Facilities, and Administration, and ensure each complaint is shown under its selected category.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-a-public-complaint-board-that-lists-complaints-with-status-labels-submitted-under-review-in-progress-resolved-keep-complaints-visible-until-marked-resolved-include-a-complaint-detail-page",
+      "title": "Build a public complaint board that lists complaints with status labels: Submitted, Under Review, In Progress, Resolved; keep complaints visible until marked Resolved; include a complaint detail page.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-an-admin-only-moderation-and-management-interface-to-update-complaint-status-submitted-under-review-in-progress-resolved-and-to-remove-or-hide-complaints-that-violate-moderation-rules",
+      "title": "Provide an admin-only moderation and management interface to update complaint status (Submitted → Under Review → In Progress → Resolved) and to remove or hide complaints that violate moderation rules.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-solutions-updates-page-that-lists-official-responses-common-solutions-and-allow-admins-to-create-and-publish-solution-update-entries-that-can-reference-one-or-more-related-complaints-or-categories",
+      "title": "Implement a Solutions & Updates page that lists official responses/common solutions, and allow admins to create and publish solution/update entries that can reference one or more related complaints or categories.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-search-and-filter-capabilities-across-public-complaints-including-free-text-search-and-filters-for-category-status-and-urgency",
+      "title": "Add search and filter capabilities across public complaints, including free-text search and filters for category, status, and urgency.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enforce-basic-moderation-rules-to-reduce-misuse-and-inappropriate-language-during-complaint-submission-including-a-profanity-inappropriate-language-filter-and-clear-user-feedback-when-content-is-rejected",
+      "title": "Enforce basic moderation rules to reduce misuse and inappropriate language during complaint submission, including a profanity/inappropriate-language filter and clear user feedback when content is rejected.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-the-ui-to-be-clean-formal-and-mobile-friendly-with-clear-category-tabs-and-status-tags-and-apply-a-consistent-visual-theme-colors-typography-spacing-components-across-all-pages",
+      "title": "Design the UI to be clean, formal, and mobile-friendly with clear category tabs and status tags, and apply a consistent visual theme (colors, typography, spacing, components) across all pages.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-site-logo-with-the-user-uploaded-image-website-logo-png-by-generating-and-using-a-512x512-logo-asset-at-frontend-public-assets-generated-flame-issue-tracker-logo-dim-512x512-png-the-same-path-currently-referenced-in-the-header-ensuring-the-logo-renders-correctly-in-the-header-on-all-pages",
+      "title": "Replace the current site logo with the user-uploaded image (website logo.png) by generating and using a 512x512 logo asset at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png (the same path currently referenced in the header), ensuring the logo renders correctly in the header on all pages.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-favicon-derived-from-the-uploaded-logo-and-reference-it-in-frontend-index-html-so-browser-tabs-show-the-new-icon",
+      "title": "Add a favicon derived from the uploaded logo and reference it in frontend/index.html so browser tabs show the new icon.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Structured complaint submission form with fields (type, category, description, urgency) and optional proof upload",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Complaint categorization and category pages/tabs (e.g., food services, academics, safety, discipline, hostel/facilities, administration)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Public complaint board showing complaints with status labels (submitted/under review/in progress/resolved) and visibility until resolved",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Solutions and updates page for official responses/common resolutions to repeated issues",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Search and filter to find existing/reported complaints and answers",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Basic moderation rules to prevent misuse and inappropriate language",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Mobile-friendly, clean and formal UI with clear category tabs and status tags",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "FLAME Issue Tracker",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}
