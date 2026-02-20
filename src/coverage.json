@@ -1,25 +1,43 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T09:20:58.716Z",
+  "generatedAt": "2026-02-20T10:19:34.113Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 0,
+    "total": 4,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-20",
-        "summary": "Add the Principal ID 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist managed by AccessControl.isAdmin so this user can access all /admin routes and perform admin-only operations.",
+        "id": "REQ-38",
+        "summary": "Fix the backend getAdminAllowlist() query method to ensure it returns the complete list of admin Principals without throwing errors or exceptions, and add robust error handling so it always returns a valid array even if AccessControl state is uninitialized.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-21",
-        "summary": "Verify that the admin allowlist state persists correctly across canister upgrades and does not reset or drop existing admin principals when deploying this change. If a state migration is required by the current AccessControl design, implement a conditional migration that preserves all existing state while adding the new admin Principal.",
+        "id": "REQ-39",
+        "summary": "Verify and ensure that Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' is hardcoded as a permanent super-admin in the AccessControl module initialization, guaranteeing it is always present in the allowlist regardless of stored state or upgrade scenarios.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-40",
+        "summary": "Add defensive error handling in the AccessDeniedScreen component's admin allowlist fetch logic to prevent UI errors when getAdminAllowlist() fails, ensuring the user's Principal ID remains visible and copyable even if the allowlist cannot be loaded.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/AccessDeniedScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/AccessDeniedScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-41",
+        "summary": "Add backend logging or debug output during AccessControl initialization and getAdminAllowlist() execution to verify that the hardcoded super-admin is present and that the allowlist query executes successfully.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
@@ -28,15 +46,16 @@
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
+    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
+    "frontend/src/components/AccessDeniedScreen.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

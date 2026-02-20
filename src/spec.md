@@ -1,10 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Grant admin access to Principal jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe.
+**Goal:** Fix admin allowlist loading to grant access to authenticated user with Principal ID jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe.
 
 **Planned changes:**
-- Add Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist
-- Ensure admin allowlist state persists across canister upgrades without losing existing admins
+- Fix backend getAdminAllowlist() query to return the complete admin allowlist without throwing errors, with robust error handling to always return a valid array
+- Ensure Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' is hardcoded as a permanent super-admin in AccessControl initialization
+- Add defensive error handling in AccessDeniedScreen component to keep Principal ID visible and copyable when allowlist fetch fails
+- Add backend logging during AccessControl initialization and getAdminAllowlist() execution to verify super-admin presence
 
-**User-visible outcome:** The user with Principal jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe can access the admin panel and perform admin operations.
+**User-visible outcome:** The authenticated user with the specified Principal ID will be recognized as an admin and granted access to restricted areas. If the allowlist cannot be loaded, the user will still see their Principal ID and be able to copy it, with a clear error message displayed.

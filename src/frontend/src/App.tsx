@@ -7,6 +7,7 @@ import SolutionsUpdatesPage from './pages/SolutionsUpdatesPage';
 import AdminLandingPage from './pages/admin/AdminLandingPage';
 import AdminComplaintsPage from './pages/admin/AdminComplaintsPage';
 import AdminSolutionsPage from './pages/admin/AdminSolutionsPage';
+import AdminAccessControlPage from './pages/admin/AdminAccessControlPage';
 import WhoAmIPage from './pages/WhoAmIPage';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from 'next-themes';
@@ -67,6 +68,12 @@ const adminSolutionsRoute = createRoute({
   component: AdminSolutionsPage,
 });
 
+const adminAccessControlRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/access-control',
+  component: AdminAccessControlPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   submitRoute,
@@ -76,6 +83,7 @@ const routeTree = rootRoute.addChildren([
   adminRoute,
   adminComplaintsRoute,
   adminSolutionsRoute,
+  adminAccessControlRoute,
 ]);
 
 const router = createRouter({ routeTree });

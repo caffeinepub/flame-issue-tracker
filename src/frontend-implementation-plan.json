@@ -1,6 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Grant admin access to Principal jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe",
-  "requirements": []
+  "title": "Fix admin allowlist loading to grant access to authenticated user",
+  "requirements": [
+    {
+      "id": "REQ-40",
+      "summary": "Add defensive error handling in AccessDeniedScreen to prevent UI errors when admin allowlist fetch fails",
+      "acceptanceCriteria": [
+        "AccessDeniedScreen displays user Principal even when allowlist fetch fails",
+        "Copy-to-clipboard functionality works regardless of allowlist load state",
+        "Error message clearly indicates allowlist loading failure without breaking the UI"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/AccessDeniedScreen.tsx",
+          "operation": "modify",
+          "description": "Add robust error handling for the getAdminAllowlist() backend capability fetch. Ensure the component gracefully handles fetch failures by: (1) wrapping the allowlist query in try-catch or using React Query error states, (2) displaying the user's Principal ID and copy-to-clipboard button even when the allowlist cannot be loaded, (3) showing a clear error message ('Unable to load admin allowlist. Please contact support.') without breaking the UI layout, and (4) preserving all existing functionality for successful allowlist loads. The Principal ID display and copy functionality must remain visible and operational regardless of allowlist fetch state."
+        }
+      ]
+    }
+  ]
 }

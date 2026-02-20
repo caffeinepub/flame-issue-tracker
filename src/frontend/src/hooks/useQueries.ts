@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { Complaint, ComplaintCategory, ComplaintStatus, SolutionUpdate, UserProfile, ExternalBlob } from '../backend';
+import { Complaint, ComplaintCategory, ComplaintStatus, SolutionUpdate, UserProfile, ExternalBlob, Principal } from '../backend';
 
 // User Profile Queries
 export function useGetCallerUserProfile() {
@@ -197,5 +197,41 @@ export function useAddSolution() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['solutions'] });
     },
+  });
+}
+
+// Admin Allowlist Query - Fixed to handle backend response structure
+export function useGetAdminAllowlist() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Principal[] | null>({
+    queryKey: ['adminAllowlist'],
+    queryFn: async () => {
+      if (!actor) return null;
+      try {
+        const result = await actor.getAdminAllowlist();
+        return result.adminPrincipals;
+      } catch (error) {
+        console.error('Failed to fetch admin allowlist:', error);
+        return null;
+      }
+    },
+    enabled: !!actor && !isFetching,
+    retry: 1,
+  });
+}
+
+// Debug Query
+export function useGetAdminDebugInfo() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery({
+    queryKey: ['adminDebugInfo'],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getAdminAllowlistDebugInfo();
+    },
+    enabled: !!actor && !isFetching,
+    retry: 1,
   });
 }

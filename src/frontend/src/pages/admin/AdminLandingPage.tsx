@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import AdminRouteGuard from '../../components/admin/AdminRouteGuard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Lightbulb } from 'lucide-react';
+import { FileText, Lightbulb, Shield } from 'lucide-react';
 
 export default function AdminLandingPage() {
   return (
@@ -61,6 +61,31 @@ export default function AdminLandingPage() {
                     <li>• Create new solution entries</li>
                     <li>• Link solutions to complaints</li>
                     <li>• Publish updates for students</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/admin/access-control" className="group">
+              <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                      <Shield className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="group-hover:text-primary transition-colors">
+                      Access Control
+                    </CardTitle>
+                  </div>
+                  <CardDescription>
+                    View and manage admin access allowlist
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="text-sm text-muted-foreground space-y-2">
+                    <li>• View authorized admin principals</li>
+                    <li>• Verify admin access configuration</li>
+                    <li>• Troubleshoot access issues</li>
                   </ul>
                 </CardContent>
               </Card>

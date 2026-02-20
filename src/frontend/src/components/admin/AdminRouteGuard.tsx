@@ -9,9 +9,10 @@ interface AdminRouteGuardProps {
 }
 
 export default function AdminRouteGuard({ children }: AdminRouteGuardProps) {
-  const { data: userRole, isLoading } = useGetCallerUserRole();
+  const { data: userRole, isLoading, isFetched } = useGetCallerUserRole();
 
-  if (isLoading) {
+  // Show loading state while checking authorization
+  if (isLoading || !isFetched) {
     return (
       <div className="container py-8 space-y-4">
         <Skeleton className="h-8 w-64" />
@@ -20,6 +21,7 @@ export default function AdminRouteGuard({ children }: AdminRouteGuardProps) {
     );
   }
 
+  // Only allow admin users
   if (userRole !== UserRole.admin) {
     return <AccessDeniedScreen userRole={userRole} />;
   }

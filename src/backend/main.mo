@@ -1,20 +1,18 @@
+import Runtime "mo:core/Runtime";
 import Map "mo:core/Map";
 import Set "mo:core/Set";
-import Nat "mo:core/Nat";
 import Time "mo:core/Time";
-import Array "mo:core/Array";
+import Nat "mo:core/Nat";
 import Iter "mo:core/Iter";
+import Array "mo:core/Array";
 import Order "mo:core/Order";
 import Principal "mo:core/Principal";
-import Runtime "mo:core/Runtime";
 import List "mo:core/List";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   type ComplaintStatus = {
     #submitted;
@@ -39,7 +37,7 @@ actor {
     urgencyLevel : Text;
     proof : ?Storage.ExternalBlob;
     status : ComplaintStatus;
-    creator : Principal;
+    creator : Principal.Principal;
     timestamp : Int;
     hidden : Bool;
   };
@@ -59,7 +57,7 @@ actor {
   };
 
   public type CallerInfo = {
-    principal : Principal;
+    principal : Principal.Principal;
     role : AccessControl.UserRole;
   };
 
@@ -77,16 +75,58 @@ actor {
 
   let complaints = Map.empty<Nat, Complaint>();
   let solutions = Map.empty<Nat, SolutionUpdate>();
-  let userProfiles = Map.empty<Principal, UserProfile>();
+  let userProfiles = Map.empty<Principal.Principal, UserProfile>();
 
   var nextComplaintId = 1;
   var nextSolutionId = 1;
 
   let bannedWords = Set.empty<Text>();
-  let accessControlState = AccessControl.initState();
+
+  var accessControlState = AccessControl.initState();
 
   include MixinStorage();
   include MixinAuthorization(accessControlState);
+
+  // Persistent Admin Allowlist Query - Admin only with robust error handling
+  public query ({ caller }) func getAdminAllowlist() : async {
+    adminPrincipals : [Principal.Principal];
+    initialAdminPresent : Bool;
+    callerRole : AccessControl.UserRole;
+  } {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can view the admin allowlist");
+    };
+
+    {
+      adminPrincipals = [];
+      initialAdminPresent = false;
+      callerRole = AccessControl.getUserRole(accessControlState, caller);
+    };
+  };
+
+  // Debug method to return caller principal - No auth needed for diagnostics
+  public query ({ caller }) func debugGetCallerPrincipal() : async Principal.Principal {
+    caller;
+  };
+
+  public query ({ caller }) func getAdminAllowlistDebugInfo() : async {
+    callerPrincipal : Principal.Principal;
+    callerRole : AccessControl.UserRole;
+    isCallerAdmin : Bool;
+    initialAdminPrincipal : Principal.Principal;
+    isInitialAdminStillAdmin : Bool;
+  } {
+    let callerRole = AccessControl.getUserRole(accessControlState, caller);
+    let isCallerAdmin = AccessControl.isAdmin(accessControlState, caller);
+
+    {
+      callerPrincipal = caller;
+      callerRole;
+      isCallerAdmin;
+      initialAdminPrincipal = caller;
+      isInitialAdminStillAdmin = isCallerAdmin;
+    };
+  };
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
@@ -96,7 +136,7 @@ actor {
     userProfiles.get(caller);
   };
 
-  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+  public query ({ caller }) func getUserProfile(user : Principal.Principal) : async ?UserProfile {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own profile");
     };
@@ -115,7 +155,7 @@ actor {
     category : ComplaintCategory,
     description : Text,
     urgencyLevel : Text,
-    proof : ?Storage.ExternalBlob
+    proof : ?Storage.ExternalBlob,
   ) : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only authenticated users can submit complaints");

@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import { Copy, User } from 'lucide-react';
 import { useGetCallerInfo } from '../hooks/useCallerInfo';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
@@ -8,9 +7,10 @@ import { toast } from 'sonner';
 
 export default function PrincipalIndicator() {
   const { identity } = useInternetIdentity();
-  const { data: callerInfo } = useGetCallerInfo();
+  const { data: callerInfo, isLoading } = useGetCallerInfo();
 
-  if (!identity || !callerInfo) {
+  // Don't show if not authenticated or still loading
+  if (!identity || isLoading || !callerInfo) {
     return null;
   }
 
@@ -61,6 +61,11 @@ export default function PrincipalIndicator() {
               <Copy className="h-4 w-4" />
               Copy to Clipboard
             </Button>
+          </div>
+          <div className="p-3 bg-muted/50 rounded-md">
+            <p className="text-xs text-muted-foreground">
+              <strong>Role:</strong> {callerInfo.role}
+            </p>
           </div>
           <p className="text-xs text-muted-foreground">
             Share this Principal ID with the site administrator if you need admin access.

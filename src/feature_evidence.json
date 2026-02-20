@@ -1,4 +1,25 @@
 {
   "kind": "feature_evidence_report",
-  "features": []
+  "features": [
+    {
+      "featureId": "feature-add-defensive-error-handling-in-the-accessdeniedscreen-component-s-admin-allowlist-fetch-logic-to-prevent-ui-errors-when-getadminallowlist-fails-ensuring-the-user-s-principal-id-remains-visible-and-copyable-even-if-the-allowlist-cannot-be-loaded",
+      "featureTitle": "Add defensive error handling in the AccessDeniedScreen component's admin allowlist fetch logic to prevent UI errors when getAdminAllowlist() fails, ensuring the user's Principal ID remains visible and copyable even if the allowlist cannot be loaded.",
+      "files": [
+        "frontend/src/components/AccessDeniedScreen.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-40"
+      ],
+      "confidence": "high"
+    }
+  ]
 }

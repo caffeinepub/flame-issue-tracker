@@ -32,6 +32,7 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const Principal = IDL.Principal;
 export const ComplaintStatus = IDL.Variant({
   'resolved' : IDL.Null,
   'submitted' : IDL.Null,
@@ -42,7 +43,7 @@ export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const Complaint = IDL.Record({
   'id' : IDL.Nat,
   'status' : ComplaintStatus,
-  'creator' : IDL.Principal,
+  'creator' : Principal,
   'urgencyLevel' : IDL.Text,
   'hidden' : IDL.Bool,
   'description' : IDL.Text,
@@ -55,7 +56,7 @@ export const UserProfile = IDL.Record({
   'email' : IDL.Opt(IDL.Text),
 });
 export const CallerInfo = IDL.Record({
-  'principal' : IDL.Principal,
+  'principal' : Principal,
   'role' : UserRole,
 });
 export const SolutionUpdate = IDL.Record({
@@ -102,6 +103,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'debugGetCallerPrincipal' : IDL.Func([], [Principal], ['query']),
   'deleteComplaint' : IDL.Func([IDL.Nat], [], []),
   'filterComplaintsByCategory' : IDL.Func(
       [ComplaintCategory],
@@ -113,6 +115,30 @@ export const idlService = IDL.Service({
       [IDL.Vec(Complaint)],
       ['query'],
     ),
+  'getAdminAllowlist' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'callerRole' : UserRole,
+          'adminPrincipals' : IDL.Vec(Principal),
+          'initialAdminPresent' : IDL.Bool,
+        }),
+      ],
+      ['query'],
+    ),
+  'getAdminAllowlistDebugInfo' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'callerRole' : UserRole,
+          'isInitialAdminStillAdmin' : IDL.Bool,
+          'isCallerAdmin' : IDL.Bool,
+          'initialAdminPrincipal' : Principal,
+          'callerPrincipal' : Principal,
+        }),
+      ],
+      ['query'],
+    ),
   'getAllComplaints' : IDL.Func([], [IDL.Vec(Complaint)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -120,11 +146,7 @@ export const idlService = IDL.Service({
   'getCurrentUserPrincipal' : IDL.Func([], [CallerInfo], ['query']),
   'getPublicComplaints' : IDL.Func([], [IDL.Vec(Complaint)], ['query']),
   'getSolutions' : IDL.Func([], [IDL.Vec(SolutionUpdate)], ['query']),
-  'getUserProfile' : IDL.Func(
-      [IDL.Principal],
-      [IDL.Opt(UserProfile)],
-      ['query'],
-    ),
+  'getUserProfile' : IDL.Func([Principal], [IDL.Opt(UserProfile)], ['query']),
   'hideComplaint' : IDL.Func([IDL.Nat], [], []),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
@@ -164,6 +186,7 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
+  const Principal = IDL.Principal;
   const ComplaintStatus = IDL.Variant({
     'resolved' : IDL.Null,
     'submitted' : IDL.Null,
@@ -174,7 +197,7 @@ export const idlFactory = ({ IDL }) => {
   const Complaint = IDL.Record({
     'id' : IDL.Nat,
     'status' : ComplaintStatus,
-    'creator' : IDL.Principal,
+    'creator' : Principal,
     'urgencyLevel' : IDL.Text,
     'hidden' : IDL.Bool,
     'description' : IDL.Text,
@@ -186,10 +209,7 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'email' : IDL.Opt(IDL.Text),
   });
-  const CallerInfo = IDL.Record({
-    'principal' : IDL.Principal,
-    'role' : UserRole,
-  });
+  const CallerInfo = IDL.Record({ 'principal' : Principal, 'role' : UserRole });
   const SolutionUpdate = IDL.Record({
     'id' : IDL.Nat,
     'relatedComplaints' : IDL.Vec(IDL.Nat),
@@ -234,6 +254,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'debugGetCallerPrincipal' : IDL.Func([], [Principal], ['query']),
     'deleteComplaint' : IDL.Func([IDL.Nat], [], []),
     'filterComplaintsByCategory' : IDL.Func(
         [ComplaintCategory],
@@ -245,6 +266,30 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(Complaint)],
         ['query'],
       ),
+    'getAdminAllowlist' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'callerRole' : UserRole,
+            'adminPrincipals' : IDL.Vec(Principal),
+            'initialAdminPresent' : IDL.Bool,
+          }),
+        ],
+        ['query'],
+      ),
+    'getAdminAllowlistDebugInfo' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'callerRole' : UserRole,
+            'isInitialAdminStillAdmin' : IDL.Bool,
+            'isCallerAdmin' : IDL.Bool,
+            'initialAdminPrincipal' : Principal,
+            'callerPrincipal' : Principal,
+          }),
+        ],
+        ['query'],
+      ),
     'getAllComplaints' : IDL.Func([], [IDL.Vec(Complaint)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -252,11 +297,7 @@ export const idlFactory = ({ IDL }) => {
     'getCurrentUserPrincipal' : IDL.Func([], [CallerInfo], ['query']),
     'getPublicComplaints' : IDL.Func([], [IDL.Vec(Complaint)], ['query']),
     'getSolutions' : IDL.Func([], [IDL.Vec(SolutionUpdate)], ['query']),
-    'getUserProfile' : IDL.Func(
-        [IDL.Principal],
-        [IDL.Opt(UserProfile)],
-        ['query'],
-      ),
+    'getUserProfile' : IDL.Func([Principal], [IDL.Opt(UserProfile)], ['query']),
     'hideComplaint' : IDL.Func([IDL.Nat], [], []),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),

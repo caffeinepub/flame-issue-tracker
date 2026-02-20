@@ -1,11 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
+  "projectStateVersion": 25,
   "summary": "Complaint and issue-tracking website for FLAME University students, with structured complaint submission, categorization, public status tracking, and publicly visible solutions/updates to improve transparency and resolution efficiency.",
   "architectural_notes": [
     "Admin Panel should be accessible at /admin; ensure the frontend router/build includes the /admin route and page bundle in production deployments.",
     "Ensure the backend includes and serves an authenticated identity/debug endpoint (e.g., GET /api/whoami) in production builds so users can retrieve their Principal after Internet Identity login.",
-    "Admin access is controlled by an allowlist of Internet Identity Principals; add jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe to the admin allowlist to grant /admin access."
+    "Admin access is controlled by an allowlist of Internet Identity Principals; add jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe to the admin allowlist to grant /admin access.",
+    "Implement persistent super-admin initialization that stores the owner Principal (jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe) in stable storage to survive all canister upgrades and deployments."
   ],
   "known_issues": [
     "Admin panel URL /admin returns \"Not Found\" on production deployment (https://flame-issue-tracker-lm2.caffeine.xyz/admin).",
@@ -133,6 +134,62 @@
         "REQ-16"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-ensure-the-frontend-correctly-propagates-the-authenticated-internet-identity-principal-to-all-backend-calls-so-that-accesscontrol-checks-receive-the-correct-caller-principal-in-production",
+      "title": "Ensure the frontend correctly propagates the authenticated Internet Identity principal to all backend calls, so that AccessControl checks receive the correct caller principal in production.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-accessdeniedscreen-component-to-display-the-user-s-current-principal-fetched-from-the-backend-directly-on-the-access-denied-page-so-users-can-immediately-see-which-identity-the-system-recognized-without-navigating-to-api-whoami",
+      "title": "Update the AccessDeniedScreen component to display the user's current principal (fetched from the backend) directly on the access denied page, so users can immediately see which identity the system recognized without navigating to /api/whoami.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-admin-management-page-at-admin-access-control-that-displays-the-current-admin-allowlist-retrieved-from-the-backend-showing-all-principal-ids-with-admin-access",
+      "title": "Create an admin management page at `/admin/access-control` that displays the current admin allowlist retrieved from the backend, showing all Principal IDs with admin access.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-accessdeniedscreen-component-to-display-both-the-user-s-current-principal-already-implemented-and-a-list-of-all-principals-that-have-admin-access-so-users-can-immediately-compare-their-identity-against-the-authorized-list",
+      "title": "Update the AccessDeniedScreen component to display both the user's current Principal (already implemented) and a list of all Principals that have admin access, so users can immediately compare their identity against the authorized list.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-link-to-the-admin-management-page-admin-access-control-from-the-adminlandingpage-navigation-cards-so-admins-can-easily-access-the-allowlist-viewer",
+      "title": "Add a link to the admin management page (`/admin/access-control`) from the AdminLandingPage navigation cards, so admins can easily access the allowlist viewer.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-in-the-accessdeniedscreen-component-to-gracefully-handle-cases-where-getadminallowlist-fails-displaying-a-meaningful-error-message-and-allowing-users-to-still-see-their-own-principal-id-and-copy-it",
+      "title": "Add comprehensive error handling in the AccessDeniedScreen component to gracefully handle cases where getAdminAllowlist() fails, displaying a meaningful error message and allowing users to still see their own Principal ID and copy it.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-defensive-error-handling-in-the-accessdeniedscreen-component-s-admin-allowlist-fetch-logic-to-prevent-ui-errors-when-getadminallowlist-fails-ensuring-the-user-s-principal-id-remains-visible-and-copyable-even-if-the-allowlist-cannot-be-loaded",
+      "title": "Add defensive error handling in the AccessDeniedScreen component's admin allowlist fetch logic to prevent UI errors when getAdminAllowlist() fails, ensuring the user's Principal ID remains visible and copyable even if the allowlist cannot be loaded.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -223,6 +280,116 @@
       "summary": "Verify that the admin allowlist state persists correctly across canister upgrades and does not reset or drop existing admin principals when deploying this change. If a state migration is required by the current AccessControl design, implement a conditional migration that preserves all existing state while adding the new admin Principal.",
       "reqIds": [
         "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Verify that the Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' is correctly added to the backend admin allowlist and that AccessControl.isAdmin returns true for this principal in the deployed canister.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Add logging or a debug query method in the backend that returns the current admin allowlist state, so developers can verify which principals have admin access without needing to redeploy.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add the Principal ID 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist managed by AccessControl so this user can access all /admin routes and perform admin-only operations.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Verify that the admin allowlist modification preserves all existing admin principals and does not reset or drop any existing access-control state during deployment.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Add comprehensive admin access diagnostics including backend debug logging to verify caller Principal, admin management page showing current allowlist, persistent super-admin initialization for Principal jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe that survives deployments, and clear error messages showing current vs. authorized Principals when access is denied",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Add a backend query method `getAdminAllowlist()` that returns the complete list of Principal IDs currently granted admin access, so the admin management page can display the current allowlist state.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Add a backend query method `debugGetCallerPrincipal()` that returns the caller's Principal ID as seen by the backend, for diagnostic purposes when troubleshooting access issues.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Implement persistent super-admin initialization in the backend that ensures Principal `jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe` is always present in the admin allowlist after every deployment and upgrade, treating it as a permanent owner.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Hardcode Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' as a permanent super-admin in the backend that initializes on every deployment and upgrade, ensuring this Principal always has admin access regardless of stored state.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Fix the backend getAdminAllowlist() query method to ensure it returns the complete list of admin Principals without errors, and add proper error handling so it never returns null or throws uncaught exceptions.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Verify that the AccessControl module correctly initializes and persists admin state across canister upgrades, ensuring that the hardcoded super-admin Principal is never lost during upgrades and that the state migration (if any) preserves all existing admin principals.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Fix the backend getAdminAllowlist() query method to ensure it returns the complete list of admin Principals without throwing errors or exceptions, and add robust error handling so it always returns a valid array even if AccessControl state is uninitialized.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Verify and ensure that Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' is hardcoded as a permanent super-admin in the AccessControl module initialization, guaranteeing it is always present in the allowlist regardless of stored state or upgrade scenarios.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Add backend logging or debug output during AccessControl initialization and getAdminAllowlist() execution to verify that the hardcoded super-admin is present and that the allowlist query executes successfully.",
+      "reqIds": [
+        "REQ-41"
       ],
       "status": "pending"
     }

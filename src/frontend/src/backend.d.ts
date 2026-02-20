@@ -18,6 +18,7 @@ export interface CallerInfo {
     principal: Principal;
     role: UserRole;
 }
+export type Principal = Principal;
 export interface Complaint {
     id: bigint;
     status: ComplaintStatus;
@@ -64,9 +65,22 @@ export interface backendInterface {
     addBannedWord(word: string): Promise<void>;
     addSolution(title: string, description: string, relatedComplaints: Array<bigint>, relatedCategories: Array<ComplaintCategory>): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    debugGetCallerPrincipal(): Promise<Principal>;
     deleteComplaint(complaintId: bigint): Promise<void>;
     filterComplaintsByCategory(category: ComplaintCategory): Promise<Array<Complaint>>;
     filterComplaintsByStatus(status: ComplaintStatus): Promise<Array<Complaint>>;
+    getAdminAllowlist(): Promise<{
+        callerRole: UserRole;
+        adminPrincipals: Array<Principal>;
+        initialAdminPresent: boolean;
+    }>;
+    getAdminAllowlistDebugInfo(): Promise<{
+        callerRole: UserRole;
+        isInitialAdminStillAdmin: boolean;
+        isCallerAdmin: boolean;
+        initialAdminPrincipal: Principal;
+        callerPrincipal: Principal;
+    }>;
     getAllComplaints(): Promise<Array<Complaint>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;

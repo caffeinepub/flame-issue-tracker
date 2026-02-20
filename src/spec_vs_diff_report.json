@@ -1,32 +1,65 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T09:20:58.713Z",
-  "summary": "The diff implements a migration system (backend/migration.mo) and integrates it into main.mo, but does not add the specific Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the admin allowlist. The migration.run function only returns the old state unchanged ('old;'), meaning no state transformation or Principal addition occurs. REQ-20's core requirement—adding the specific Principal to the allowlist—is missing. REQ-21's migration infrastructure is present but incomplete since it doesn't actually add the new Principal or demonstrate conditional migration logic.",
+  "generatedAt": "2026-02-20T10:19:34.109Z",
+  "summary": "The diff shows partial implementation of admin allowlist fixes, but critical requirements are missing or incorrectly implemented. The backend getAdminAllowlist() returns empty arrays instead of actual admin data, the hardcoded super-admin Principal is not visible in the truncated backend code, logging requirements are absent, and frontend error handling appears incomplete.",
   "missing_requirements": [
     {
-      "id": "REQ-20",
-      "requirement": "Add the Principal ID 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist",
-      "reason": "The diff shows migration.mo with a run() function that returns 'old;' unchanged, and no code in main.mo or migration.mo that adds the specific Principal to accessControlState or any admin allowlist structure. The Principal ID does not appear anywhere in the diff.",
+      "id": "REQ-38",
+      "requirement": "Fix the backend getAdminAllowlist() query method to ensure it returns the complete list of admin Principals without throwing errors or exceptions",
+      "reason": "The getAdminAllowlist() method in backend/main.mo returns hardcoded empty arrays (adminPrincipals = []; initialAdminPresent = false;) instead of fetching actual admin data from AccessControl state",
       "evidence": [
-        "backend/migration.mo",
         "backend/main.mo"
       ]
     },
     {
-      "id": "REQ-21",
-      "requirement": "Implement conditional migration that preserves all existing state while adding the new admin Principal",
-      "reason": "The migration.run() function in migration.mo only returns 'old;' without any logic to add the new Principal, check for existing state, or perform conditional migration. While the infrastructure is present, the actual migration logic to add the Principal and preserve existing admins is not implemented.",
+      "id": "REQ-39",
+      "requirement": "Verify and ensure that Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' is hardcoded as a permanent super-admin in the AccessControl module initialization",
+      "reason": "The hardcoded super-admin Principal is not visible in the truncated backend/main.mo code. No evidence of AccessControl initialization with this specific Principal, and getAdminAllowlist() returns empty array suggesting super-admin may not be properly initialized",
       "evidence": [
-        "backend/migration.mo"
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-41",
+      "requirement": "Add backend logging or debug output during AccessControl initialization and getAdminAllowlist() execution to verify that the hardcoded super-admin is present and that the allowlist query executes successfully",
+      "reason": "No logging statements are visible in the backend/main.mo diff. No evidence of Debug.print or similar logging during AccessControl initialization or in getAdminAllowlist() method execution",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "requirement": "Add defensive error handling in the AccessDeniedScreen component's admin allowlist fetch logic to prevent UI errors when getAdminAllowlist() fails",
+      "reason": "While AccessDeniedScreen.tsx shows some error handling (allowlistError variable, conditional rendering), the implementation appears incomplete in the truncated diff. The useGetAdminAllowlist hook is referenced but its error handling implementation is not visible in the truncated useQueries.ts file",
+      "evidence": [
+        "frontend/src/components/AccessDeniedScreen.tsx",
+        "frontend/src/hooks/useQueries.ts"
       ]
     }
   ],
-  "hallucinated_features": [],
-  "confidence": 0.95,
+  "hallucinated_features": [
+    {
+      "description": "Implementation of getAdminAllowlistDebugInfo() debug endpoint returning caller principal and role information",
+      "reason": "This debug method was not requested in any requirement. REQ-41 requested logging/debug output during initialization and query execution, not a separate debug query endpoint",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Implementation of debugGetCallerPrincipal() query method",
+      "reason": "This diagnostic method was not requested in the BuildRequest. While it may be useful for debugging, it was not part of the specified requirements",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.75,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/components/AccessDeniedScreen.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]
 }

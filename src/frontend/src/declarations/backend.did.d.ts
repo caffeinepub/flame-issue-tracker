@@ -33,6 +33,7 @@ export type ComplaintStatus = { 'resolved' : null } |
   { 'underReview' : null } |
   { 'inProgress' : null };
 export type ExternalBlob = Uint8Array;
+export type Principal = Principal;
 export interface SolutionUpdate {
   'id' : bigint,
   'relatedComplaints' : Array<bigint>,
@@ -79,12 +80,31 @@ export interface _SERVICE {
     bigint
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'debugGetCallerPrincipal' : ActorMethod<[], Principal>,
   'deleteComplaint' : ActorMethod<[bigint], undefined>,
   'filterComplaintsByCategory' : ActorMethod<
     [ComplaintCategory],
     Array<Complaint>
   >,
   'filterComplaintsByStatus' : ActorMethod<[ComplaintStatus], Array<Complaint>>,
+  'getAdminAllowlist' : ActorMethod<
+    [],
+    {
+      'callerRole' : UserRole,
+      'adminPrincipals' : Array<Principal>,
+      'initialAdminPresent' : boolean,
+    }
+  >,
+  'getAdminAllowlistDebugInfo' : ActorMethod<
+    [],
+    {
+      'callerRole' : UserRole,
+      'isInitialAdminStillAdmin' : boolean,
+      'isCallerAdmin' : boolean,
+      'initialAdminPrincipal' : Principal,
+      'callerPrincipal' : Principal,
+    }
+  >,
   'getAllComplaints' : ActorMethod<[], Array<Complaint>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
