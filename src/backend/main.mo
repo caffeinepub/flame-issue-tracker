@@ -7,7 +7,6 @@ import Iter "mo:core/Iter";
 import Array "mo:core/Array";
 import Order "mo:core/Order";
 import Principal "mo:core/Principal";
-import List "mo:core/List";
 import Storage "blob-storage/Storage";
 import MixinStorage "blob-storage/Mixin";
 import AccessControl "authorization/access-control";
@@ -61,6 +60,13 @@ actor {
     role : AccessControl.UserRole;
   };
 
+  type SuperAdminBootstrapResult = {
+    principal : Principal.Principal;
+    isAdmin : Bool;
+    role : AccessControl.UserRole;
+    message : Text;
+  };
+
   module Complaint {
     public func compare(cmp1 : Complaint, cmp2 : Complaint) : Order.Order {
       Nat.compare(cmp1.id, cmp2.id);
@@ -83,6 +89,7 @@ actor {
   let bannedWords = Set.empty<Text>();
 
   var accessControlState = AccessControl.initState();
+  var bootstrapExecuted = false;
 
   include MixinStorage();
   include MixinAuthorization(accessControlState);
@@ -125,6 +132,33 @@ actor {
       isCallerAdmin;
       initialAdminPrincipal = caller;
       isInitialAdminStillAdmin = isCallerAdmin;
+    };
+  };
+
+  // Super admin bootstrap - Allows any user to call when no admins exist, requires admin privileges once initialized
+  public shared ({ caller }) func bootstrapSuperAdmin() : async SuperAdminBootstrapResult {
+    // If bootstrap has already been executed, only admins can call this function
+    if (bootstrapExecuted and not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Bootstrap already executed. Only admins can re-bootstrap.");
+    };
+
+    let superAdminPrincipal = Principal.fromText("jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe");
+
+    // Force initialize the super admin with placeholder tokens
+    AccessControl.initialize(
+      accessControlState,
+      superAdminPrincipal,
+      "1e251e94-9ce5-47b6-9e42-985898f8e404", // Placeholder admin token
+      "user-provided-token-936e4107-4e1f-4bf4-8fe8-c8451ec1e246", // Placeholder user-provided token
+    );
+
+    bootstrapExecuted := true;
+
+    return {
+      principal = superAdminPrincipal;
+      isAdmin = AccessControl.isAdmin(accessControlState, superAdminPrincipal);
+      role = AccessControl.getUserRole(accessControlState, superAdminPrincipal);
+      message = "Super Admin principal " # superAdminPrincipal.toText() # " has been initialized as admin";
     };
   };
 

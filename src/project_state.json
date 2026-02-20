@@ -1,19 +1,22 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 25,
+  "projectStateVersion": 31,
   "summary": "Complaint and issue-tracking website for FLAME University students, with structured complaint submission, categorization, public status tracking, and publicly visible solutions/updates to improve transparency and resolution efficiency.",
   "architectural_notes": [
     "Admin Panel should be accessible at /admin; ensure the frontend router/build includes the /admin route and page bundle in production deployments.",
     "Ensure the backend includes and serves an authenticated identity/debug endpoint (e.g., GET /api/whoami) in production builds so users can retrieve their Principal after Internet Identity login.",
     "Admin access is controlled by an allowlist of Internet Identity Principals; add jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe to the admin allowlist to grant /admin access.",
-    "Implement persistent super-admin initialization that stores the owner Principal (jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe) in stable storage to survive all canister upgrades and deployments."
+    "Implement persistent super-admin initialization that stores the owner Principal (jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe) in stable storage to survive all canister upgrades and deployments.",
+    "Bootstrap security pattern: Allow any user to initialize admin access via bootstrapSuperAdmin() endpoint if and only if the admin allowlist is currently empty; once at least one admin exists, restrict bootstrap access to existing admins only."
   ],
   "known_issues": [
     "Admin panel URL /admin returns \"Not Found\" on production deployment (https://flame-issue-tracker-lm2.caffeine.xyz/admin).",
     "After logging in with Internet Identity, /api/whoami returns \"Not Found\", preventing users from retrieving their Principal ID.",
-    "Admin panel at /admin shows \"Access Denied\" even when user believes they are using the same Internet Identity account (likely admin allowlist/principal mismatch or auth not being recognized in production)."
+    "Admin panel at /admin shows \"Access Denied\" even when user believes they are using the same Internet Identity account (likely admin allowlist/principal mismatch or auth not being recognized in production).",
+    "Backend AccessControl initialization is not recognizing the hardcoded super-admin Principal (jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe) as admin despite matching expected values."
   ],
   "isFixRequest": true,
+  "imageRequirements": "## Required Images\n- FLAME COMPLAINTS logo with blue and orange flame icon and white text on dark gray background, square composition centered (flame-issue-tracker-logo.dim_512x512.png)\n- Favicon-sized FLAME COMPLAINTS icon derived from the logo, suitable for browser tab display (favicon.ico)",
   "existing_features": [
     {
       "id": "feature-implement-complaint-submission-with-a-structured-form-that-collects-complaint-type-category-description-urgency-level-and-an-optional-proof-upload-validate-inputs-and-show-clear-success-error-states",
@@ -188,6 +191,38 @@
       "title": "Add defensive error handling in the AccessDeniedScreen component's admin allowlist fetch logic to prevent UI errors when getAdminAllowlist() fails, ensuring the user's Principal ID remains visible and copyable even if the allowlist cannot be loaded.",
       "reqIds": [
         "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-bootstrap-admin-access-button-to-the-accessdeniedscreen-component-that-calls-the-backend-bootstrapsuperadmin-endpoint-when-clicked-displays-loading-state-during-the-operation-and-shows-success-error-feedback-using-toast-notifications",
+      "title": "Add a 'Bootstrap Admin Access' button to the AccessDeniedScreen component that calls the backend `bootstrapSuperAdmin()` endpoint when clicked, displays loading state during the operation, and shows success/error feedback using toast notifications.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-after-the-bootstrap-endpoint-successfully-initializes-admin-access-implement-automatic-verification-by-re-querying-the-user-s-admin-status-and-updating-the-ui-to-reflect-the-new-access-level-without-requiring-manual-page-refresh",
+      "title": "After the bootstrap endpoint successfully initializes admin access, implement automatic verification by re-querying the user's admin status and updating the UI to reflect the new access level without requiring manual page refresh.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-accessdeniedscreen-component-to-reflect-the-new-bootstrap-security-model-by-updating-the-help-text-to-explain-that-bootstrap-works-when-no-admins-exist-and-showing-appropriate-messaging-based-on-the-bootstrap-failure-reason-empty-allowlist-vs-already-initialized",
+      "title": "Update the AccessDeniedScreen component to reflect the new bootstrap security model by updating the help text to explain that bootstrap works when no admins exist, and showing appropriate messaging based on the bootstrap failure reason (empty allowlist vs. already initialized).",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-existing-logo-at-frontend-public-assets-generated-flame-issue-tracker-logo-dim-512x512-png-with-the-user-uploaded-flame-complaints-logo-image-6-png-preserving-the-512x512-dimensions-and-ensuring-the-logo-renders-correctly-in-the-header-container-across-all-pages",
+      "title": "Replace the existing logo at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png with the user-uploaded FLAME COMPLAINTS logo (image-6.png), preserving the 512x512 dimensions and ensuring the logo renders correctly in the header container across all pages",
+      "reqIds": [
+        "REQ-47"
       ],
       "version": 1
     }
@@ -390,6 +425,54 @@
       "summary": "Add backend logging or debug output during AccessControl initialization and getAdminAllowlist() execution to verify that the hardcoded super-admin is present and that the allowlist query executes successfully.",
       "reqIds": [
         "REQ-41"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Create a one-time bootstrap endpoint in the backend that forces initialization of Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' as super-admin in AccessControl, bypassing any initialization issues",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Add a bootstrap button on the AccessDeniedScreen that calls the bootstrap endpoint to force-initialize admin access for the current user",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Include verification logic after bootstrap to confirm the operation succeeded and the user now has admin access",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Create a backend update method `bootstrapSuperAdmin()` that force-initializes Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' as a super-admin in the AccessControl system, bypassing any initialization issues, and returns a success confirmation with the updated admin status.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Update bootstrap logic to implement 'first-user-becomes-admin' security pattern: allow any user to bootstrap if the admin allowlist is empty, but require admin privileges once at least one admin exists",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Update the backend bootstrapSuperAdmin() method to check if the admin allowlist is empty before enforcing authorization restrictions, allowing any user to call bootstrap when no admins exist, but requiring admin privileges once at least one admin has been initialized.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Update the favicon referenced in frontend/index.html to use the new FLAME COMPLAINTS branding derived from the uploaded logo, ensuring browser tabs display the new icon",
+      "reqIds": [
+        "REQ-48"
       ],
       "status": "pending"
     }

@@ -1,21 +1,43 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix admin allowlist loading to grant access to authenticated user",
+  "title": "Replace site logo with FLAME COMPLAINTS branding",
   "requirements": [
     {
-      "id": "REQ-40",
-      "summary": "Add defensive error handling in AccessDeniedScreen to prevent UI errors when admin allowlist fetch fails",
+      "id": "REQ-47",
+      "summary": "Replace the existing logo with the FLAME COMPLAINTS branding at the same path and dimensions",
       "acceptanceCriteria": [
-        "AccessDeniedScreen displays user Principal even when allowlist fetch fails",
-        "Copy-to-clipboard functionality works regardless of allowlist load state",
-        "Error message clearly indicates allowlist loading failure without breaking the UI"
+        "The new FLAME COMPLAINTS logo replaces the existing logo at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png",
+        "The logo maintains 512x512 dimensions as required by the header implementation",
+        "The logo displays correctly in the header container with proper aspect ratio",
+        "The logo appears consistently across all pages of the application"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/AccessDeniedScreen.tsx",
+          "path": "frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png",
           "operation": "modify",
-          "description": "Add robust error handling for the getAdminAllowlist() backend capability fetch. Ensure the component gracefully handles fetch failures by: (1) wrapping the allowlist query in try-catch or using React Query error states, (2) displaying the user's Principal ID and copy-to-clipboard button even when the allowlist cannot be loaded, (3) showing a clear error message ('Unable to load admin allowlist. Please contact support.') without breaking the UI layout, and (4) preserving all existing functionality for successful allowlist loads. The Principal ID display and copy functionality must remain visible and operational regardless of allowlist fetch state."
+          "description": "Replace the existing logo image file with the generated FLAME COMPLAINTS logo (from image-6.png). The new logo features a blue and orange flame icon with white 'FLAME COMPLAINTS' text on a dark gray background in a square composition. The file must maintain exactly 512x512 pixel dimensions to ensure proper rendering in the header container across all pages. This file is referenced by frontend/src/components/AppLayout.tsx and will automatically appear in the header navigation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-48",
+      "summary": "Update the favicon to use the new FLAME COMPLAINTS branding",
+      "acceptanceCriteria": [
+        "A favicon asset is generated from the FLAME COMPLAINTS logo",
+        "The favicon is properly referenced in frontend/index.html",
+        "Browser tabs display the new FLAME COMPLAINTS icon"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/favicon.dim_32x32.png",
+          "operation": "create",
+          "description": "Create a 32x32 pixel favicon derived from the FLAME COMPLAINTS logo (generated from image-6.png). This favicon should be optimized for browser tab display, focusing on the recognizable flame icon element from the full logo to ensure visibility at small sizes."
+        },
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Update the favicon link element to reference the new FLAME COMPLAINTS favicon at frontend/public/assets/generated/favicon.dim_32x32.png. Replace or add the <link rel=\"icon\"> tag in the <head> section to point to the newly generated favicon file, ensuring browser tabs display the new FLAME COMPLAINTS branding."
         }
       ]
     }

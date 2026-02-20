@@ -42,6 +42,12 @@ export interface SolutionUpdate {
   'description' : string,
   'timestamp' : bigint,
 }
+export interface SuperAdminBootstrapResult {
+  'principal' : Principal,
+  'role' : UserRole,
+  'message' : string,
+  'isAdmin' : boolean,
+}
 export interface UserProfile { 'name' : string, 'email' : [] | [string] }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -80,6 +86,7 @@ export interface _SERVICE {
     bigint
   >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'bootstrapSuperAdmin' : ActorMethod<[], SuperAdminBootstrapResult>,
   'debugGetCallerPrincipal' : ActorMethod<[], Principal>,
   'deleteComplaint' : ActorMethod<[bigint], undefined>,
   'filterComplaintsByCategory' : ActorMethod<

@@ -18,6 +18,12 @@ export interface CallerInfo {
     principal: Principal;
     role: UserRole;
 }
+export interface SuperAdminBootstrapResult {
+    principal: Principal;
+    role: UserRole;
+    message: string;
+    isAdmin: boolean;
+}
 export type Principal = Principal;
 export interface Complaint {
     id: bigint;
@@ -65,6 +71,7 @@ export interface backendInterface {
     addBannedWord(word: string): Promise<void>;
     addSolution(title: string, description: string, relatedComplaints: Array<bigint>, relatedCategories: Array<ComplaintCategory>): Promise<bigint>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    bootstrapSuperAdmin(): Promise<SuperAdminBootstrapResult>;
     debugGetCallerPrincipal(): Promise<Principal>;
     deleteComplaint(complaintId: bigint): Promise<void>;
     filterComplaintsByCategory(category: ComplaintCategory): Promise<Array<Complaint>>;

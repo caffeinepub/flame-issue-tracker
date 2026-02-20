@@ -33,6 +33,12 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const Principal = IDL.Principal;
+export const SuperAdminBootstrapResult = IDL.Record({
+  'principal' : Principal,
+  'role' : UserRole,
+  'message' : IDL.Text,
+  'isAdmin' : IDL.Bool,
+});
 export const ComplaintStatus = IDL.Variant({
   'resolved' : IDL.Null,
   'submitted' : IDL.Null,
@@ -103,6 +109,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'bootstrapSuperAdmin' : IDL.Func([], [SuperAdminBootstrapResult], []),
   'debugGetCallerPrincipal' : IDL.Func([], [Principal], ['query']),
   'deleteComplaint' : IDL.Func([IDL.Nat], [], []),
   'filterComplaintsByCategory' : IDL.Func(
@@ -187,6 +194,12 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const Principal = IDL.Principal;
+  const SuperAdminBootstrapResult = IDL.Record({
+    'principal' : Principal,
+    'role' : UserRole,
+    'message' : IDL.Text,
+    'isAdmin' : IDL.Bool,
+  });
   const ComplaintStatus = IDL.Variant({
     'resolved' : IDL.Null,
     'submitted' : IDL.Null,
@@ -254,6 +267,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'bootstrapSuperAdmin' : IDL.Func([], [SuperAdminBootstrapResult], []),
     'debugGetCallerPrincipal' : IDL.Func([], [Principal], ['query']),
     'deleteComplaint' : IDL.Func([IDL.Nat], [], []),
     'filterComplaintsByCategory' : IDL.Func(

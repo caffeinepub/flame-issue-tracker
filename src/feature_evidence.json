@@ -2,11 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-defensive-error-handling-in-the-accessdeniedscreen-component-s-admin-allowlist-fetch-logic-to-prevent-ui-errors-when-getadminallowlist-fails-ensuring-the-user-s-principal-id-remains-visible-and-copyable-even-if-the-allowlist-cannot-be-loaded",
-      "featureTitle": "Add defensive error handling in the AccessDeniedScreen component's admin allowlist fetch logic to prevent UI errors when getAdminAllowlist() fails, ensuring the user's Principal ID remains visible and copyable even if the allowlist cannot be loaded.",
-      "files": [
-        "frontend/src/components/AccessDeniedScreen.tsx"
-      ],
+      "featureId": "feature-replace-the-existing-logo-at-frontend-public-assets-generated-flame-issue-tracker-logo-dim-512x512-png-with-the-user-uploaded-flame-complaints-logo-image-6-png-preserving-the-512x512-dimensions-and-ensuring-the-logo-renders-correctly-in-the-header-container-across-all-pages",
+      "featureTitle": "Replace the existing logo at frontend/public/assets/generated/flame-issue-tracker-logo.dim_512x512.png with the user-uploaded FLAME COMPLAINTS logo (image-6.png), preserving the 512x512 dimensions and ensuring the logo renders correctly in the header container across all pages",
+      "files": [],
       "components": [
         "authorization@4.0.0",
         "blob-storage@4.0.0",
@@ -17,7 +15,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-40"
+        "REQ-47"
       ],
       "confidence": "high"
     }

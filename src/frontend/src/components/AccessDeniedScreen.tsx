@@ -1,21 +1,27 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ShieldAlert, Copy, ExternalLink, AlertCircle } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { ShieldAlert, Copy, ExternalLink, AlertCircle, Loader2, ShieldCheck } from 'lucide-react';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { UserRole } from '../backend';
 import { useGetCallerInfo } from '../hooks/useCallerInfo';
-import { useGetAdminAllowlist } from '../hooks/useQueries';
+import { useGetAdminAllowlist, useBootstrapSuperAdmin } from '../hooks/useQueries';
+import { useIsCallerAdmin } from '../hooks/useAuthorization';
 import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 interface AccessDeniedScreenProps {
   userRole?: UserRole;
 }
 
 export default function AccessDeniedScreen({ userRole }: AccessDeniedScreenProps) {
+  const navigate = useNavigate();
   const { data: callerInfo, isLoading: callerInfoLoading } = useGetCallerInfo();
   const { data: adminAllowlist, isLoading: allowlistLoading, error: allowlistError } = useGetAdminAllowlist();
+  const { refetch: refetchIsAdmin } = useIsCallerAdmin();
+  const bootstrapMutation = useBootstrapSuperAdmin();
+  const [isVerifying, setIsVerifying] = useState(false);
   
   const isGuest = userRole === UserRole.guest;
   const isUser = userRole === UserRole.user;
@@ -36,6 +42,58 @@ export default function AccessDeniedScreen({ userRole }: AccessDeniedScreenProps
   const isInAllowlist = adminAllowlist && Array.isArray(adminAllowlist) 
     ? adminAllowlist.some((adminPrincipal) => adminPrincipal.toText() === principalText)
     : false;
+
+  // Check if admin allowlist is empty (no admins exist yet)
+  const noAdminsExist = adminAllowlist && Array.isArray(adminAllowlist) && adminAllowlist.length === 0;
+
+  // Determine if we should show the bootstrap button
+  // Show bootstrap if: no admins exist (any user can bootstrap) OR user matches expected admin but not in allowlist
+  const expectedAdminPrincipal = 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe';
+  const isPrincipalMatch = principalText === expectedAdminPrincipal;
+  const shouldShowBootstrap = !allowlistLoading && (noAdminsExist || (isPrincipalMatch && !isInAllowlist));
+
+  const handleBootstrap = async () => {
+    try {
+      setIsVerifying(true);
+      const result = await bootstrapMutation.mutateAsync();
+      
+      toast.success('Admin access initialized successfully!');
+      
+      // Wait a moment for backend state to settle
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Verify admin status
+      const { data: isAdmin } = await refetchIsAdmin();
+      
+      if (isAdmin) {
+        toast.success('Admin access verified! Redirecting to admin panel...');
+        // Navigate to admin panel
+        setTimeout(() => {
+          navigate({ to: '/admin' });
+        }, 1000);
+      } else {
+        toast.error('Bootstrap completed but admin access not confirmed. Please try logging out and back in.');
+      }
+    } catch (error: any) {
+      console.error('Bootstrap error:', error);
+      
+      // Distinguish between different error types
+      const errorMessage = error.message || '';
+      
+      if (errorMessage.includes('Bootstrap already executed') && errorMessage.includes('Only admins')) {
+        // Bootstrap locked because admins already exist
+        toast.error('Bootstrap is locked: Admin access has already been initialized. Only existing admins can re-bootstrap. Please contact an administrator for access.');
+      } else if (errorMessage.includes('no admins exist')) {
+        // Bootstrap available but failed for another reason
+        toast.error('Bootstrap failed: ' + errorMessage);
+      } else {
+        // Generic error
+        toast.error('Failed to initialize admin access: ' + errorMessage);
+      }
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   return (
     <div className="container max-w-2xl py-16">
@@ -159,14 +217,63 @@ export default function AccessDeniedScreen({ userRole }: AccessDeniedScreenProps
                       )}
                     </>
                   ) : (
-                    <Alert>
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription className="text-xs">
-                        No admin principals found in the allowlist. Please contact support.
+                    <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+                      <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      <AlertDescription className="text-xs text-blue-900 dark:text-blue-100">
+                        No admin principals found. The system is ready for first-time initialization. Any user can bootstrap themselves as the first admin.
                       </AlertDescription>
                     </Alert>
                   )}
                 </div>
+
+                {/* Bootstrap Admin Access Button - Shown when no admins exist OR when principal matches but not in allowlist */}
+                {shouldShowBootstrap && (
+                  <div className="pt-3 border-t space-y-3">
+                    {noAdminsExist ? (
+                      <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+                        <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <AlertDescription className="text-xs text-blue-900 dark:text-blue-100">
+                          <strong>First-Time Setup Available:</strong> No administrators have been initialized yet. You can become the first admin by clicking the bootstrap button below.
+                        </AlertDescription>
+                      </Alert>
+                    ) : (
+                      <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+                        <ShieldCheck className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <AlertDescription className="text-xs text-blue-900 dark:text-blue-100">
+                          <strong>Access Issue Detected:</strong> Your principal matches the expected admin principal, but you don't have admin access. This suggests the access control initialization may not have completed successfully.
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                    
+                    <div className="space-y-2">
+                      <Button
+                        onClick={handleBootstrap}
+                        disabled={bootstrapMutation.isPending || isVerifying}
+                        className="w-full gap-2"
+                        variant="default"
+                      >
+                        {bootstrapMutation.isPending || isVerifying ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            {isVerifying ? 'Verifying access...' : 'Initializing admin access...'}
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="h-4 w-4" />
+                            Bootstrap Admin Access
+                          </>
+                        )}
+                      </Button>
+                      
+                      <p className="text-xs text-muted-foreground text-center">
+                        {noAdminsExist 
+                          ? 'This is a one-time initialization that works when no admins exist. Once at least one admin has been initialized, only existing admins can re-bootstrap.'
+                          : 'This is a one-time initialization fix that will grant you admin access. Click the button above to initialize your admin privileges.'
+                        }
+                      </p>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="pt-2 border-t">
                   <p className="text-xs text-muted-foreground mb-2">

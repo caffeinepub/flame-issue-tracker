@@ -235,3 +235,24 @@ export function useGetAdminDebugInfo() {
     retry: 1,
   });
 }
+
+// Bootstrap Super Admin Mutation
+export function useBootstrapSuperAdmin() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.bootstrapSuperAdmin();
+    },
+    onSuccess: () => {
+      // Invalidate all authorization-related queries to trigger fresh data
+      queryClient.invalidateQueries({ queryKey: ['callerUserRole'] });
+      queryClient.invalidateQueries({ queryKey: ['isCallerAdmin'] });
+      queryClient.invalidateQueries({ queryKey: ['adminAllowlist'] });
+      queryClient.invalidateQueries({ queryKey: ['adminDebugInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserInfo'] });
+    },
+  });
+}
