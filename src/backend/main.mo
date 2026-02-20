@@ -1,6 +1,5 @@
 import Map "mo:core/Map";
 import Set "mo:core/Set";
-import Text "mo:core/Text";
 import Nat "mo:core/Nat";
 import Time "mo:core/Time";
 import Array "mo:core/Array";
@@ -228,7 +227,6 @@ actor {
 
   // Public Query Functions
   public query ({ caller }) func getCurrentUserPrincipal() : async CallerInfo {
-    // No authorization check - all callers (including guests) can query their own identity
     {
       principal = caller;
       role = AccessControl.getUserRole(accessControlState, caller);

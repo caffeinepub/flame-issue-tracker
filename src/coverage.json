@@ -1,62 +1,28 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-17T12:45:42.273Z",
+  "generatedAt": "2026-02-20T09:20:58.716Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 0,
     "items": [
       {
-        "id": "REQ-13",
-        "summary": "Add a backend query method that returns the current caller’s Principal (and optionally their role) so the frontend can reliably display the logged-in identity.",
+        "id": "REQ-20",
+        "summary": "Add the Principal ID 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist managed by AccessControl.isAdmin so this user can access all /admin routes and perform admin-only operations.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-14",
-        "summary": "Create a frontend route at \"/api/whoami\" that renders a simple page showing the current Principal (and role if available) and provides a one-click copy action.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/WhoAmIPage.tsx",
-          "frontend/src/hooks/useCallerInfo.ts",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/WhoAmIPage.tsx",
-          "frontend/src/hooks/useCallerInfo.ts",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-15",
-        "summary": "Show the logged-in Principal (shortened with a full-value tooltip or expandable view) somewhere in the main authenticated UI (e.g., header area) so users can confirm which Internet Identity account is active.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/PrincipalIndicator.tsx",
-          "frontend/src/components/AppLayout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/PrincipalIndicator.tsx",
-          "frontend/src/components/AppLayout.tsx"
-        ]
-      },
-      {
-        "id": "REQ-16",
-        "summary": "Update the admin access denied experience to include troubleshooting guidance that directs users to \"/api/whoami\" to retrieve their Principal for admin enablement.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/AccessDeniedScreen.tsx",
-          "frontend/src/components/admin/AdminRouteGuard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/AccessDeniedScreen.tsx",
-          "frontend/src/components/admin/AdminRouteGuard.tsx"
-        ]
+        "id": "REQ-21",
+        "summary": "Verify that the admin allowlist state persists correctly across canister upgrades and does not reset or drop existing admin principals when deploying this change. If a state migration is required by the current AccessControl design, implement a conditional migration that preserves all existing state while adding the new admin Principal.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
@@ -64,20 +30,13 @@
     "backend/main.mo",
     "backend/migration.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
-    "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/AccessDeniedScreen.tsx",
-    "frontend/src/components/AppLayout.tsx",
-    "frontend/src/components/PrincipalIndicator.tsx",
-    "frontend/src/components/admin/AdminRouteGuard.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useCallerInfo.ts",
-    "frontend/src/pages/WhoAmIPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

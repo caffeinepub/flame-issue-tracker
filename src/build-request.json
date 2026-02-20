@@ -1,101 +1,56 @@
 {
   "kind": "build_request",
-  "title": "Fix missing Principal display and restore /api/whoami",
-  "projectName": "FLAME Issue Tracker",
+  "title": "Grant admin access to Principal jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-13",
-      "text": "Add a backend query method that returns the current caller’s Principal (and optionally their role) so the frontend can reliably display the logged-in identity.",
+      "id": "REQ-20",
+      "text": "Add the Principal ID 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist managed by AccessControl.isAdmin so this user can access all /admin routes and perform admin-only operations.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-last"
         ],
         "quotes": [
-          "my principal isnt coming fix the site first"
+          "add this principal id i still cant access the admin panel.  jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe"
         ]
       },
       "acceptanceCriteria": [
-        "A new public query method exists in backend/main.mo that returns the caller Principal in a frontend-friendly format (e.g., Text).",
-        "Calling the method when logged out returns the anonymous principal rather than failing.",
-        "Calling the method when logged in returns the authenticated Internet Identity principal."
+        "The Principal 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' is added to the admin allowlist in the backend",
+        "The user with this Principal can successfully access the /admin routes without seeing 'Access Denied'",
+        "The AccessControl.isAdmin method returns true for this Principal",
+        "The admin allowlist change persists across canister upgrades"
       ]
     },
     {
-      "id": "REQ-14",
-      "text": "Create a frontend route at \"/api/whoami\" that renders a simple page showing the current Principal (and role if available) and provides a one-click copy action.",
-      "target": "frontend",
+      "id": "REQ-21",
+      "text": "Verify that the admin allowlist state persists correctly across canister upgrades and does not reset or drop existing admin principals when deploying this change. If a state migration is required by the current AccessControl design, implement a conditional migration that preserves all existing state while adding the new admin Principal.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "the page that is supposed to show the principal is showing not found"
+          "msg-last"
         ]
       },
       "acceptanceCriteria": [
-        "Visiting https://flame-issue-tracker-lm2.caffeine.xyz/api/whoami no longer shows Not Found and renders a page within the SPA.",
-        "The page shows the current Principal value pulled from the backend (not hardcoded).",
-        "The page includes a Copy button that copies the displayed Principal to clipboard and shows a success/toast confirmation."
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "text": "Show the logged-in Principal (shortened with a full-value tooltip or expandable view) somewhere in the main authenticated UI (e.g., header area) so users can confirm which Internet Identity account is active.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "my principal isnt coming fix the site first"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When a user is authenticated, the UI displays a recognizable Principal indicator (e.g., first/last characters).",
-        "There is a clear way to view/copy the full Principal from the UI without needing to navigate to admin routes.",
-        "When logged out, the Principal indicator is not shown (or clearly indicates the user is not logged in)."
-      ]
-    },
-    {
-      "id": "REQ-16",
-      "text": "Update the admin access denied experience to include troubleshooting guidance that directs users to \"/api/whoami\" to retrieve their Principal for admin enablement.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "its showing access denied now"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The Access Denied screen includes a visible link to \"/api/whoami\" and instructs the user to copy and share the Principal with the site administrator.",
-        "User-facing text is in English and clearly distinguishes ‘not admin’ from ‘not logged in’."
+        "Existing admin principals remain in the allowlist after upgrade",
+        "The new Principal is successfully added and persists",
+        "No admin access is lost during the upgrade process",
+        "State migration (if needed) executes conditionally and preserves all authorization data"
       ]
     }
   ],
   "constraints": [
-    "Keep all Motoko logic in the single backend actor at backend/main.mo (single-actor architecture).",
-    "Do not edit files under frontend/src/hooks/useInternetIdentity.ts(x), frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or anything inside frontend/src/components/ui; compose or add new components/pages instead."
+    "Do not modify the single-actor architecture in backend/main.mo",
+    "Preserve all existing admin principals in the allowlist",
+    "Ensure backward compatibility with existing AccessControl logic"
   ],
   "nonGoals": [
-    "Do not automatically grant admin access to the currently logged-in Principal.",
-    "Do not add third-party authentication providers; use Internet Identity only."
+    "Creating a user interface for managing admin principals",
+    "Implementing role-based access control beyond the existing admin allowlist",
+    "Modifying frontend authentication flows"
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

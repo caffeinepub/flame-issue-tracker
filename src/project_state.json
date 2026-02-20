@@ -1,10 +1,11 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
+  "projectStateVersion": 15,
   "summary": "Complaint and issue-tracking website for FLAME University students, with structured complaint submission, categorization, public status tracking, and publicly visible solutions/updates to improve transparency and resolution efficiency.",
   "architectural_notes": [
     "Admin Panel should be accessible at /admin; ensure the frontend router/build includes the /admin route and page bundle in production deployments.",
-    "Ensure the backend includes and serves an authenticated identity/debug endpoint (e.g., GET /api/whoami) in production builds so users can retrieve their Principal after Internet Identity login."
+    "Ensure the backend includes and serves an authenticated identity/debug endpoint (e.g., GET /api/whoami) in production builds so users can retrieve their Principal after Internet Identity login.",
+    "Admin access is controlled by an allowlist of Internet Identity Principals; add jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe to the admin allowlist to grant /admin access."
   ],
   "known_issues": [
     "Admin panel URL /admin returns \"Not Found\" on production deployment (https://flame-issue-tracker-lm2.caffeine.xyz/admin).",
@@ -182,6 +183,46 @@
       "summary": "Add a backend query method that returns the current caller’s Principal (and optionally their role) so the frontend can reliably display the logged-in identity.",
       "reqIds": [
         "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Grant admin access to the Internet Identity Principal \"jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe\" so that this user can access the /admin routes and perform admin-only backend operations guarded by AccessControl.isAdmin.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Grant administrator access to the Internet Identity Principal \"jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe\" by adding it to the backend admin allowlist used by AccessControl.isAdmin, so that this user can access all /admin routes and perform admin-only operations.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Ensure the admin allowlist change persists correctly across canister upgrades (do not reset or accidentally drop existing access-control state when deploying this fix). If a state migration is required by the existing AccessControl state design, add a conditional migration that preserves current state while adding the new admin principal.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add the Principal ID 'jwxbf-7t3mq-z2mw2-kglpm-vjiqq-yfjhx-fxojo-5k7kl-i6gx5-idwc6-qqe' to the backend admin allowlist managed by AccessControl.isAdmin so this user can access all /admin routes and perform admin-only operations.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Verify that the admin allowlist state persists correctly across canister upgrades and does not reset or drop existing admin principals when deploying this change. If a state migration is required by the current AccessControl design, implement a conditional migration that preserves all existing state while adding the new admin Principal.",
+      "reqIds": [
+        "REQ-21"
       ],
       "status": "pending"
     }
